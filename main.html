@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Простая 2D игра</title>
+<!--     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5+zr/Exo2QDQt6q9g9A0JVvea6TkrWI7tF5Fa3lJ" crossorigin="anonymous"> -->
+    <style>
+        canvas {
+            border: 1px solid gray;
+        }
+        body {
+            background-color: #111; /* Черный цвет фона */
+            color: #fff; /* Белый цвет текста (можно изменить по вашему усмотрению) */
+        }
+        body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+    }
+    #container {
+        display: flex;
+        height: 100%;
+    }
+    #sidebar {
+        width: calc(100% / );
+        background-color: #808080;
+    }
+    #canvas-container {
+        flex: 1;
+        position: relative;
+    }
+    #canvas {
+        width: 100%;
+        height: 100%;
+    }
+    .control {
+        margin: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="sidebar">
+            <div class="control">
+                <label for="slider1">Количество нейтронов</label>
+                <input type="range" id="neitrons" min="0" max="500" value="100">
+            </div>
+            <div class="control">
+                <label for="slider2">Количество протонов</label>
+                <input type="range" id="protons" min="0" max="500" value="100">
+            </div>
+            <div class="control">
+                <button id="start">Старт</button>
+            </div>
+        </div>
+        <div id="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+    </div>
+    <script src="game.js">
+        
+    </script>
+
+</body>
+</html>
