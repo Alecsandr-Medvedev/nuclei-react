@@ -136,7 +136,7 @@ function handleCoulombs(obj1, obj2) {
     // Вычисляем расстояние между объектами
     const distance2 = (Math.pow(obj2.x - obj1.x, 2) + Math.pow(obj2.y - obj1.y, 2));
     
-    if ( Math.pow(distance2, 0.5) > (obj1.radius + obj2.radius) + 10) {
+    if ( Math.pow(distance2, 0.5) > (obj1.radius + obj2.radius)) {
         // console.log(Math.pow(distance2, 0.5), (obj1.radius + obj2.radius));
         // Вычисляем силу между объектами с помощью закона Кулона
     const force = coulombsLawForce(obj1.charge, obj2.charge, distance2 * Math.pow(10, -27));
