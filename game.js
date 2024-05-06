@@ -2,6 +2,7 @@ const k = 8.99 * Math.pow(10, 9);
 const ks = 10e-10 * 2;
 const r0 = Math.pow(10, -15)
 const time = Math.pow(10, -12)
+let maxID = 0;
 // const temperature = 3;
 // const massK = Math.pow(10, 15);
 function sleep(ms) {
@@ -20,6 +21,8 @@ class Nuclon {
         this.speedY = dy;
         this.charge = 0;
         this.mass = 0;
+        this.id = maxID;
+        maxID += 1;
     }
     draw(ctx) {
         ctx.beginPath();
@@ -127,7 +130,7 @@ function handles(objects){
         for (let j = i + 1; j < objects.length; j++) {
             handleCoulombs(objects[i], objects[j]);
             handleStorngForces(objects[i], objects[j]);
-            handleCollisions(objects[i], objects[j]);
+            handleCollisions(objects[i], objects[j]);    
         }
     }
 }
@@ -137,7 +140,7 @@ function handleCoulombs(obj1, obj2) {
     const distance2 = (Math.pow(obj2.x - obj1.x, 2) + Math.pow(obj2.y - obj1.y, 2));
     
     if ( Math.pow(distance2, 0.5) > (obj1.radius + obj2.radius)) {
-        // console.log(Math.pow(distance2, 0.5), (obj1.radius + obj2.radius));
+        // console.log(Math.pow(distance2, 0.5), (obj1.radius + obj2.radius) + 10);
         // Вычисляем силу между объектами с помощью закона Кулона
     const force = coulombsLawForce(obj1.charge, obj2.charge, distance2 * Math.pow(10, -27));
 
@@ -215,12 +218,8 @@ window.onresize = () => {
   canvas.height = window.innerHeight - 10;
 };
 
-// const proton1 = new Proton(100, 100, 1000000000000, 0);
-// const proton2 = new Neitron(120, 80, 0, 100000000000);
-// const proton3 = new Proton(140, 100, -1000000000000, 0);
-// const proton4 = new Neitron(120, 120, 0, -100000000000);
 
-// var nuclons = [proton1, proton3]
+// var nuclons = [proton1, proton3, proton2, proton41, proton11, proton31, proton21]
 var nuclons = [];
 
 
@@ -232,6 +231,7 @@ var step = true;
 document.addEventListener("keyup", function(event) {
              if (event.key === " ") {
                pause = ! pause;
+               event.preventDefault();
             }
             if (event.key === "ArrowRight"){
                 step = true;
@@ -241,19 +241,70 @@ document.addEventListener("keyup", function(event) {
         });
 function start(){
     nuclons = [];
-    for (var i = 0; i < countNeitrons; i++){
-        
-        nuclons.push(new Neitron(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 20000000000000 - 10000000000000, Math.random() * 20000000000000 - 10000000000000));
+    var cN = countNeitrons;
+    var cP = countProtons;
+    while (cN > 0 ||cP > 0){
+        if (cN > 0){
+            nuclons.push(new Neitron(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 20000000000000 - 10000000000000, Math.random() * 20000000000000 - 10000000000000));
+            cN -= 1;
+        }
+        if (cP > 0) {
+            nuclons.push(new Proton(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 20000000000000 - 10000000000000, Math.random() * 20000000000000 - 10000000000000));
+            cP -= 1;
+        }
     }
-    for (var i = 0; i < countProtons; i++){
-        
-        nuclons.push(new Proton(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 20000000000000 - 10000000000000, Math.random() * 20000000000000 - 10000000000000));
-     }
 
+}
+
+
+function find(x1, y1, x2, y2){
+    var cN = 0;
+    var cP = 0;
+    for (var i = 0; i < nuclons.length; i++){
+        var nucl = nuclons[i];
+        if (x1 - nucl.radius * 3 < nucl.x && x2 + nucl.radius * 3 > nucl.x && y1 - nucl.radius * 3 < nucl.y && y2 + nucl.radius * 3 > nucl.y ){
+            if (nucl.charge != 0){
+                cP += 1;
+            }
+            else{
+                cN += 1;
+            }
+            
+        }
+    }
+    return [cP, cN];
 }
 document.getElementById('neitrons').addEventListener('input', function() {countNeitrons = document.getElementById('neitrons').value});
 document.getElementById('protons').addEventListener('input', function() {countProtons = document.getElementById('protons').value});
 document.getElementById('start').addEventListener('click', start);
+canvas.addEventListener('mousedown', function (event) {
+        if (event.button == 0) {
+
+            event.preventDefault()
+            nuclons.push(new Proton(event.offsetX, event.offsetY, 0,0))
+        }
+        if (event.button == 2) {
+            event.preventDefault()
+            nuclons.push(new Neitron(event.offsetX, event.offsetY, 0,0))
+        }
+        if (event.button == 1){
+            var nums = find(event.offsetX, event.offsetY, event.offsetX, event.offsetY);
+            document.getElementById('c_neitrons').innerHTML = "n: " + nums[1];
+             document.getElementById('c_protons').innerHTML = "p: " + nums[0];
+            // var cN = 148;
+            // var cP = 92;
+            // while (cN > 0 || cP > 0){
+            //     if (cN > 0){
+            //         nuclons.push(new Neitron(event.offsetX, event.offsetY, 0, 0));
+            //         cN -= 1;
+            //     }
+            //     if (cP > 0) {
+            //         nuclons.push(new Proton(event.offsetX, event.offsetY, 0, 0));
+            //         cP -= 1;
+            //     }
+            // }
+        }
+});
 // document.getElementById('pause').addEventListener('click', function () {pause = not pause;});
 
 function gameLoop() {
@@ -268,7 +319,7 @@ function gameLoop() {
             nuclons[i].update(canvas.width, canvas.height);
         }
         
-        nuclons[i].draw(ctx);
+        
     }
         if (step) {
             handles(nuclons);
@@ -276,7 +327,9 @@ function gameLoop() {
         // step = false;
         
     }
-    
+    for (var i = 0; i < nuclons.length; i++){
+        nuclons[i].draw(ctx);
+    }
     // sleep(200);
 
     requestAnimationFrame(gameLoop);

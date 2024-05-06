@@ -38,7 +38,7 @@
     }
     </style>
 </head>
-<body>
+<body >
     <div id="container">
         <div id="sidebar">
             <div class="control">
@@ -51,14 +51,48 @@
             </div>
             <div class="control">
                 <button id="start">Старт</button>
+                <button id="infoButton">?</button>
+                <div id="dialogBox" class="dialog-box" style="display: none;">
+                    <p>Ползунки задают количество протонов и нейтронов при старте</p>
+                    <p>Кнопка старт запускает симуляцию</p>
+                    <p>Щелчок правой кнопкой мыши создаёт нейтрон</p>
+                    <p>Щелчок левой кнопкой мыши создаёт протон</p>
+                    <p>Щелчок средней кнопки мыши показывает количество ближайших протонов и нейтронов</p>
+                    <p>Пробел ставит симуляцию на паузу</p>
+                    <p>Отдаление и приближение экрана (с помощью ctrl+вращение колёсика мышы) изменяет размер мира симуляции</p>
+                </div>
+            </div>
+            <div class="control">
+                <p id="c_protons">p:</p>
+                <p id="c_neitrons">n:</p>
             </div>
         </div>
         <div id="canvas-container">
-            <canvas id="gameCanvas"></canvas>
+            <canvas id="gameCanvas" oncontextmenu="return false;"></canvas>
         </div>
     </div>
     <script src="game.js">
         
+    </script>
+    <script>
+        let show = true;
+        function showInfoDialog(event) {
+            const dialogBox = document.getElementById('dialogBox');
+            if (show){
+
+                dialogBox.style.display = 'block';
+            }
+            else{
+                dialogBox.style.display = 'none';
+            }
+            show = ! show;
+            dialogBox.style.left = (event.pageX + 10) + 'px'; // Позиционируем окно справа от кнопки
+            dialogBox.style.top = (event.pageY + 10) + 'px'; // Позиционируем окно ниже кнопки
+        }
+
+        // Получаем кнопку по id
+        const infoButton = document.getElementById('infoButton');
+        infoButton.addEventListener('click', showInfoDialog);
     </script>
 
 </body>
